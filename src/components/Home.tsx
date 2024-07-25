@@ -79,7 +79,7 @@ function Home() {
           Realtime Collaborative Whiteboard
         </h3>
         <p className="text-gray-600 text-xl leading-relaxed mb-6">
-          Experience seamless teamwork with our real-time collaborative whiteboard. Multiple users can draw, write, and manipulate objects simultaneously, seeing each other's changes instantly.
+          Experience seamless teamwork with our real-time collaborative whiteboard. Multiple users can draw, write, and manipulate objects simultaneously, seeing each other&lsquo;s changes instantly.
         </p>
         <ul className="list-disc list-inside text-gray-600 text-lg">
           <li>Multi-user real-time editing</li>

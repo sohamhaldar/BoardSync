@@ -14,7 +14,8 @@ async function getWorkspaces() {
 
   const _id = session.user._id;
   console.log(_id)
-  const res = await fetch(`http://localhost:3000/api/workspaces?_id=${_id}`);
+  
+  const res = await fetch(`${process.env.CLIENT_URL}/api/workspaces?_id=${_id}`);
   const data = await res.json();
 
   if (!data.success) {
