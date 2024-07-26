@@ -30,8 +30,10 @@ function Avatar({redirectTodashboard}:{
       await update({isAvatarSet:true,avatar:data.url});
       // await update({isAvatarSet:false});
       console.log("Changed succesfully:",session?.user);
+    }else{
+      await update({isAvatarSet:true,avatar:''});
     }
-    await update({isAvatarSet:true});
+    
     if(redirectTodashboard){
       redirectTodashboard();
     }
