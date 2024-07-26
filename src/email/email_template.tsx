@@ -34,7 +34,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
           fontStyle="normal"
         />
       </Head>
-      <Preview>Hey {username}, Here's your verification code</Preview>
+      <Preview>Hey {username}, Here&lsquo;s your verification code</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logoContainer}>
