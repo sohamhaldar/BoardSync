@@ -26,7 +26,7 @@ const WorkspaceCard = ({ name, description, members,workspaceImg,workspaceId }:{
   }
 
   return (
-    <div className='bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200' onClick={()=>router.push(`/workspace/${workspaceId}`)} >
+    <div className='bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:cursor-pointer transition-shadow duration-200' onClick={()=>router.push(`/workspace/${workspaceId}`)} >
         <div className='h-24 w-full relative rounded-lg overflow-hidden'>
             {
                 workspaceImg.length>0?(

@@ -6,10 +6,12 @@ import logo from '../../../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import {Spinner} from "@nextui-org/spinner";
+import toast, { Toaster } from 'react-hot-toast';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading,setLoading]=useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -30,6 +32,7 @@ function SignUp() {
 
   const onSubmit:SubmitHandler<FormValues> =async(data) => {
     console.log(data);
+    setLoading(true);
     const response = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: {
@@ -41,6 +44,8 @@ function SignUp() {
       // Handle error responses
       const errorData = await response.json();
       console.error('Error:', errorData);
+      toast.error(errorData.message);
+      setLoading(false);
       return;
     }
 
@@ -48,6 +53,7 @@ function SignUp() {
     const result = await response.json();
     console.log('Success:', result);
     Router.push(`/auth/u/${data.username}`);
+    setLoading(false);
     
   };
   
@@ -177,12 +183,14 @@ function SignUp() {
 
           <button
             type="submit"
-            className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg shadow-custom-pink/50 text-sm font-medium text-white bg-custom-pink hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isLoading}
+            className={`mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg shadow-custom-pink/50 text-sm font-medium text-white ${isLoading?'bg-gray-400 hover:bg-gray-400':'bg-custom-pink hover:bg-violet-500'}   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
           >
-            Submit
+            {isLoading?(<Spinner />):"Signup"}
           </button>
         </form>
       </div>
+      <Toaster />
     </div>
   );
 }

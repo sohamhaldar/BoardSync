@@ -1,12 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import OtpInput from 'react-otp-input';
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
+import {Spinner} from "@nextui-org/spinner";
 
 const Page= ({ params }: { params: { username: string }}) => {
   const [otp, setOtp] = useState<string>('');
+  const [isLoading,setLoading]=useState(false);
   const username=params.username;
-//   console.log(username);
     const Router=useRouter();
   const handleSubmit=async()=>{
     console.log(otp);
@@ -17,6 +19,7 @@ const Page= ({ params }: { params: { username: string }}) => {
     const data={
         username,otp
     }
+    setLoading(true);
     const response = await fetch('/api/auth/verify-code', {
         method: 'POST',
         headers: {
@@ -28,13 +31,16 @@ const Page= ({ params }: { params: { username: string }}) => {
         // Handle error responses
         const errorData = await response.json();
         console.error('Error:', errorData);
+        setLoading(false);
+        toast.error(errorData.message);
         return;
       }
   
-      // Handle success responses
       const result = await response.json();
       console.log('Success:', result);
+      toast.success("Verification succesfull");
       Router.push('/auth/login');
+      setLoading(false);
   }
 
   return (
@@ -64,9 +70,10 @@ const Page= ({ params }: { params: { username: string }}) => {
             // isInputNum
             renderInput={(props) => <input {...props} />}
           />
-          <button className='font-semibold p-2 bg-custom-pink/80 hover:bg-custom-pink/60 text-slate-100 rounded-md mt-4' onClick={handleSubmit}>Submit</button>
+          <button className='font-semibold p-2 bg-custom-pink/80 hover:bg-custom-pink/60 text-slate-100 rounded-md mt-4' disabled={isLoading} onClick={handleSubmit}>{isLoading?<Spinner/>:"Submit"}</button>
         </div>
       </div>
+      <Toaster/>
     </div>
   );
 }

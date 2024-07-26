@@ -50,7 +50,7 @@ function Header() {
     
     <div className={`flex flex-col lg:flex-row justify-evenly items-center h-auto lg:h-[10vh] sticky top-0 z-20 transition-colors duration-300 rounded-b-xl p-4 lg:p-0 ${bgColor} animate-dropDown`}>
       <div className={`flex justify-between items-center w-full lg:w-auto ${isMenuOpen ? 'hidden' : ''}`}>
-        <div className='flex justify-center items-center'>
+        <div className='flex justify-center items-center hover:cursor-pointer' onClick={()=>router.push('/')}>
           <Image src={logo} alt="Logo" className="md:mx-auto h-6 w-10 m-2" />
           <h1 className={`font-bold m-2 text-2xl ${logoColor}`}>BoardSync</h1>
         </div>

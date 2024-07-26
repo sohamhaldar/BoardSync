@@ -2,7 +2,9 @@
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
-function Avatar(){
+function Avatar({redirectTodashboard}:{
+  redirectTodashboard?:()=>void
+}){
   
   const {data:session,update}=useSession();
   const [avatar, setAvatar] = useState(session?.user.avatar);
@@ -28,6 +30,10 @@ function Avatar(){
       await update({isAvatarSet:true,avatar:data.url});
       // await update({isAvatarSet:false});
       console.log("Changed succesfully:",session?.user);
+    }
+    await update({isAvatarSet:true});
+    if(redirectTodashboard){
+      redirectTodashboard();
     }
   }
 

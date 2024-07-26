@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import BubbleBackground from './BubbleBackground';
-import image from '../../public/image.png';
+import shareImg from '../../public/shareImg.png';
 import Board from '../../public/board-2-cut.png';
 import Chats from '../../public/chats.png';
 import Dashboard from '../../public/dashboard.png';
@@ -29,6 +29,22 @@ function Home() {
       
     }
   }, [activeSection]);
+  useEffect(() => {
+    const pingBackend = async () => {
+      try {
+        const response = await fetch(`${process.env.CUSTOM_SERVER_URL}/ping`);
+        if (response.ok) {
+          console.log('Backend is up and running');
+        } else {
+          console.log('Backend ping failed');
+        }
+      } catch (error) {
+        console.error('Error pinging backend:', error);
+      }
+    };
+
+    pingBackend();
+  }, []);
 
   return (
     <>
@@ -133,7 +149,7 @@ function Home() {
       </div>
       <div className="md:w-1/2">
         <div className="bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-105 hover:rotate-1">
-          <Image src={Board} alt="Advanced Tools and Templates" className="w-full h-auto" />
+          <Image src={shareImg} alt="Advanced Tools and Templates" className="w-full h-auto" />
         </div>
       </div>
     </div>
@@ -195,7 +211,7 @@ function Home() {
       Our project is completely open-source and free to use. We believe in the power of collaboration and community-driven development.
     </p>
     <div className="flex justify-center space-x-6">
-      <a href="#" className="bg-gray-800 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-700 transition duration-300">
+      <a href="https://github.com/sohamhaldar/BoardSync" className="bg-gray-800 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-700 transition duration-300">
         View on GitHub
       </a>
       

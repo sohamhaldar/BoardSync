@@ -7,12 +7,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
+import {Spinner} from "@nextui-org/spinner";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const router=useRouter();
   const {data:session,update}=useSession();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading,setLoading]=useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -31,23 +33,26 @@ const Login: React.FC = () => {
 
   const onSubmit:SubmitHandler<FormValues> = async(data) => {
     console.log(data);
-    const credentials={
-      username:data.login,
-      email:data.login,
-      password:data.password
-    }
+    setLoading(true);
     const response=await signIn('credentials',{
         identifier:data.login,
         password:data.password,
       redirect:false,
     })
     console.log(response);
-    
-    if(session?.user.isAvatarSet){
+    if(response?.error){
+      toast.error(response.error);
+      setLoading(false);
+      return;
+    }
+    toast.success("Login success");
+    if(session?.user.isAvatarSet==true){
       router.push('/dashboard');
-    }else {router.push('/profile/avatar')};
+    }else {
+      router.push('/profile/avatar')
+    };
     
-
+    setLoading(false);
   };
   
   return (
@@ -134,12 +139,14 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg shadow-custom-pink/50 text-sm font-medium text-white bg-custom-pink hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isLoading}
+            className={`mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg shadow-custom-pink/50 text-sm font-medium text-white ${isLoading?'bg-gray-400 hover:bg-gray-400':'bg-custom-pink hover:bg-violet-500'}   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
           >
-            Login
+            {isLoading?(<Spinner />):"Login"}
           </button>
         </form>
       </div>
+      <Toaster />
     </div>
   );
 }

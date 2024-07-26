@@ -58,7 +58,7 @@ function Navbar({workspaceName,workspaceId,isOwner}:{
   return (
     <>
     <div className='h-[10vh] w-full bg-gray-100 flex items-center justify-between'>
-        <div className='flex h-[50%] items-center gap-2 m-4 md:ml-10'>
+        <div className='flex h-[50%] items-center gap-2 m-4 md:ml-10 hover:cursor-pointer' onClick={()=>router.push('/')}>
             <Image src={logo} className='h-[90%] w-auto top-2' alt="" />
             <h1 className='mx-2 md:block hidden text-3xl font-bold bg-gradient-to-r from-custom-pink to-violet-500 text-transparent bg-clip-text leading-snug'>BoardSync</h1>
         </div>

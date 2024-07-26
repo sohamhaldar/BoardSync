@@ -1,5 +1,7 @@
 import { Resend } from "resend";
+import { render } from '@react-email/components';
 import email_template from "@/email/email_template";
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
 interface ApiResponse{
   success:Boolean;
@@ -12,14 +14,23 @@ export async function sendVerificationEmail(
   otp: string
 ): Promise<ApiResponse> {
   const resend=new Resend(process.env.RESEND_API_KEY);
-  console.log(email);
+  const mailerSend = new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY || '',
+  });
+  const recipients = [new Recipient(email, username)];
+  const sentFrom = new Sender(process.env.MAILERSEND_EMAIL_DOMAIN||'', "BoardSync");
+  
+  const emailTemplate=render(email_template({ username, otp }),{
+    pretty:true
+  })
   try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: email,
-      subject: 'BoardSync Onboarding Verification Code',
-      react: email_template({ username, otp }),
-    });
+    const emailParams = new EmailParams()
+          .setFrom(sentFrom)
+          .setTo(recipients)
+          .setSubject("BoardSync Onboarding Verification Code")
+          .setHtml(emailTemplate)
+
+    mailerSend.email.send(emailParams);
     return { success: true, message: 'Verification email sent successfully.' };
   } catch (emailError) {
     console.error('Error sending verification email:', emailError);

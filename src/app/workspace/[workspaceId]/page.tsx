@@ -27,47 +27,76 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
   const username=session?.user.username;
   const workspaceId=params.workspaceId;
   const router=useRouter();
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
   
   useEffect(() => {
     if (socket) {
       const result = { workspaceId };
       console.log('Emitting join-workspace:', result);
+      
+      socket.on('connect', () => {
+        console.log('Socket connected');
+        setIsSocketConnected(true);
+      });
+  
+      socket.on('disconnect', () => {
+        console.log('Socket disconnected');
+        setIsSocketConnected(false);
+      });
+  
       socket.emit('join-workspace', result);
-
+  
       socket.on('joined-workspace', (data) => {
         console.log('Successfully joined workspace:', data);
       });
-
+  
       socket.on('join-error', (error) => {
         console.error('Error joining workspace:', error);
       });
+  
+      return () => {
+        socket.off('connect');
+        socket.off('disconnect');
+        socket.off('joined-workspace');
+        socket.off('join-error');
+      };
     }
   }, [socket, workspaceId]);
-  const isWorkspaceAvailable=async()=>{
-    const _id=session?.user._id;
-    if(_id){
-      const response=await fetch(`/api/workspaces?_id=${_id}`);
-    const data=await response.json();
-    console.log(data);
-    if(response.ok){
-      const result=data.data.find((item:any)=>item._id==workspaceId);
-      if(result){
-          console.log(result);
-          console.log(_id);
-          console.log('isEqual',result.owner==_id);
-          if(result.owner==_id){
-            setIsOwner(true);
-          }
-          setWorkspaceName(result.name);
-          setIsLoading(false);  // do work here
+  const isWorkspaceAvailable = async () => {
+    try {
+      if(socket){
+        setIsSocketConnected(true);
       }
+      const pingResponse = await fetch(`${process.env.CUSTOM_SERVER_URL||'http://localhost:8000'}/ping`);
+      if (!pingResponse.ok) {
+        throw new Error('Backend is not responding');
+      }
+  
+      const _id = session?.user._id;
+      if (_id) {
+        const response = await fetch(`/api/workspaces?_id=${_id}`);
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+          const result = data.data.find((item:any) => item._id == workspaceId);
+          if (result) {
+            console.log(result);
+            console.log(_id);
+            console.log('isEqual', result.owner == _id);
+            if (result.owner == _id) {
+              setIsOwner(true);
+            }
+            setWorkspaceName(result.name);
+            setIsLoading(false);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking workspace availability:', error);
     }
+  };
 
 
-    }
-    
-    
-  }
   useEffect(()=>{
     isWorkspaceAvailable();
 
@@ -128,7 +157,7 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
     </PopoverContent>
   );
   return (
-    !isLoading?(<>
+    !isLoading && isSocketConnected?(<>
       <Navbar workspaceName={workspaceName} workspaceId={workspaceId} isOwner={isOwner}/>
       <div className='w-full h-[90vh] bg-custom-gradient-2 relative'>
       

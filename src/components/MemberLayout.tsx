@@ -18,7 +18,7 @@ export default function MemberLayout({ workspaceId,data }: { workspaceId: string
       };
   
       setWorkspaceData(updatedData);
-      const response = await fetch(`${process.env.CLIENT_URL}/api/workspaces/removemember`, {
+      const response = await fetch(`/api/workspaces/removemember`, {
         method: 'POST',
         headers: { 
           "Content-type": "application/json; charset=UTF-8"
