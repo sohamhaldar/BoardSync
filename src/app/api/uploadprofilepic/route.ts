@@ -51,7 +51,7 @@ export async function POST(Request: NextRequest) {
 
     const data: CloudinaryResponse = await uploadImage(image, 'BoardSync/users_avatar') as CloudinaryResponse;
     
-    isUserPresent.avatar = data.url;
+    isUserPresent.avatar = data.secure_url;
     isUserPresent.isAvatarSet=true;
     await isUserPresent.save();
 

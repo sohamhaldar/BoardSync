@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
         if (image) {
             const data: CloudinaryResponse = await uploadImage(image, 'BoardSync/Workspaces') as CloudinaryResponse;
-            workspaceImage = data.url;
+            workspaceImage = data.secure_url;
         }
 
         const ownerId = new mongoose.Types.ObjectId(_id);

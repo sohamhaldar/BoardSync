@@ -1,5 +1,4 @@
 "use server"
-
 import Navbar from '@/components/Navbar';
 import Workspace from '@/components/Workspace';
 import { getServerSession } from 'next-auth';

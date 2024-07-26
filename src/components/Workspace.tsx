@@ -43,12 +43,12 @@ const WorkspaceCard = ({ name, description, members,workspaceImg,workspaceId }:{
       <div className='flex items-center space-x-2'>
         <AvatarGroup total={members.length>5?members.length-5:0} className='w-full flex justify-start'>
         {members.map((member:any, index:any)=> (
-          <Avatar radius='full' src={member.id.avatar} key={index} showFallback name={member.id.username} style={{
-            backgroundColor:member.id.fallBackColour
+          <Avatar radius='full' src={member.id?.avatar} key={index} showFallback name={member.id?.username} style={{
+            backgroundColor:member.id?.fallBackColour
         }} className='h-full w-auto absolute flex items-start' 
         fallback={
         <div className=' z-1 flex items-center justify-center leading-snug align-start' >
-            <p className='align-start text-lg'>{member.id.username[0]}</p>
+            <p className='align-start text-lg'>{member.id?.username[0]}</p>
          </div>
         }
         />
