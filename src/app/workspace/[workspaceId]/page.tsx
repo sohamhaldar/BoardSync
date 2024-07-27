@@ -67,7 +67,7 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
       if(socket){
         setIsSocketConnected(true);
       }
-      const pingResponse = await fetch(`${process.env.CUSTOM_SERVER_URL||'http://localhost:8000'}/ping`);
+      const pingResponse = await fetch(`${process.env.NEXT_PUBLIC_CUSTOM_SERVER_URL}/ping`);
       if (!pingResponse.ok) {
         throw new Error('Backend is not responding');
       }

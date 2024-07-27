@@ -32,7 +32,8 @@ function Home() {
   useEffect(() => {
     const pingBackend = async () => {
       try {
-        const response = await fetch(`${process.env.CUSTOM_SERVER_URL}/ping`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CUSTOM_SERVER_URL}/ping`);
+        
         if (response.ok) {
           console.log('Backend is up and running');
         } else {

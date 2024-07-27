@@ -37,7 +37,7 @@ export default function RootLayout({
       <body>
         <ScrollProvider>
           <AuthProvider>
-            <SocketProvider url={process.env.CUSTOM_SERVER_URL||'http://localhost:8000'}>
+            <SocketProvider url={'https://boardsync-backend.onrender.com'||'http://localhost:8000'}>
               <Providers>
                 {children}
               </Providers> 
