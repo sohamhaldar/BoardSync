@@ -37,7 +37,7 @@ export default function RootLayout({
       <body>
         <ScrollProvider>
           <AuthProvider>
-            <SocketProvider url={process.env.NEXT_PUBLIC_CUSTOM_SERVER_URL||'http://localhost:8000'}>
+            <SocketProvider url={process.env.NEXT_PUBLIC_CUSTOM_SERVER_URL as string}>
               <Providers>
                 {children}
               </Providers> 
