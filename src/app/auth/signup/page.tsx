@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {Spinner} from "@nextui-org/spinner";
 import toast, { Toaster } from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +32,7 @@ function SignUp() {
   });
 
   const onSubmit:SubmitHandler<FormValues> =async(data) => {
-    console.log(data);
+    // console.log(data);
     setLoading(true);
     const response = await fetch('/api/auth/signup', {
       method: 'POST',
@@ -51,7 +52,7 @@ function SignUp() {
 
     // Handle success responses
     const result = await response.json();
-    console.log('Success:', result);
+    // console.log('Success:', result);
     Router.push(`/auth/u/${data.username}`);
     setLoading(false);
     

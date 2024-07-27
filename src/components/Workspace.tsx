@@ -13,14 +13,14 @@ const WorkspaceCard = ({ name, description, members,workspaceImg,workspaceId }:{
 }) => {
   const router=useRouter();
   const deleteWorkspace=async()=>{
-    console.log('clicked');
+    // console.log('clicked');
     const response = await fetch(`/api/deleteworkspace?workspaceId=${workspaceId}`);
     if(response.ok){
       console.log('Workspace deleted succesfully');
       router.refresh();
     }else{
       const data=await response.json();
-      console.log(data);
+      // console.log(data);
     }
     
   }

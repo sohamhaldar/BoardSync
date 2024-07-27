@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import logo from '../../../../public/logo.png';
 import Image from 'next/image';
@@ -12,9 +12,10 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const router=useRouter();
-  const {data:session,update}=useSession();
+  const {data:session,update,status}=useSession();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading,setLoading]=useState(false);
+  const [isRedirecting,setRedirecting]=useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -32,28 +33,53 @@ const Login: React.FC = () => {
   });
 
   const onSubmit:SubmitHandler<FormValues> = async(data) => {
-    console.log(data);
+    // console.log(data);
     setLoading(true);
     const response=await signIn('credentials',{
         identifier:data.login,
         password:data.password,
       redirect:false,
     })
-    console.log(response);
+    // console.log(response);
     if(response?.error){
       toast.error(response.error);
       setLoading(false);
       return;
     }
     toast.success("Login success");
-    if(session?.user.isAvatarSet==true){
-      router.push('/dashboard');
-    }else {
-      router.push('/profile/avatar')
-    };
+    // console.log('checking:',session?.user.isAvatarSet);
+    // if(!session?.user.isAvatarSet as boolean){
+    //   router.push('/dashboard');
+    // }else {
+    //   router.push('/profile/avatar')
+    // };
     
     setLoading(false);
+    let Toast=toast.loading('Redirecting...',{
+        id:"RedirectToast"     
+    })
+
   };
+  useEffect(() => {
+    if (status === 'loading') return; 
+
+    if (session) {
+      
+      if (session.user.isAvatarSet === false) {
+        router.push('/profile/avatar');
+        toast.dismiss("RedirectToast");
+      } else if (session.user.isAvatarSet === true) {
+        router.push('/dashboard');
+        toast.dismiss("RedirectToast");
+      } else {
+        // console.log("Unexpected isAvatarSet value:", session.user.isAvatarSet);
+        toast.dismiss("RedirectToast");
+        toast.error('Redirection failed');
+      }
+    }
+
+    // setIsLoading(false);
+  }, [session, status, router]);
   
   return (
     <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen flex justify-center items-center">
@@ -73,6 +99,7 @@ const Login: React.FC = () => {
           </div>
           <div className="flex flex-col md:flex-row w-full justify-center space-y-2 md:space-y-0 md:space-x-2">
             <button
+              onClick={() => signIn('github')}
               type="button"
               className="text-white bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 dark:hover:bg-[#050708]/30 shadow-fuchsia-200 shadow-lg"
             >
@@ -82,6 +109,7 @@ const Login: React.FC = () => {
               Sign in with Github
             </button>
             <button
+              onClick={() => signIn('google')}
               type="button"
               className="text-gray-700 border- border-slate-400 bg-slate-100 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-white/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[white]/55 shadow-fuchsia-200 shadow-lg hover:shadow-lg"
             >

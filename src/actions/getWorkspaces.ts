@@ -5,7 +5,7 @@ import { Schema } from "mongoose";
 
 export async function getWorkspacesById(_id:string) {
     await dbConnect();
-    console.log('id:',_id);
+    // console.log('id:',_id);
     
     if (!_id) {
         return JSON.stringify({

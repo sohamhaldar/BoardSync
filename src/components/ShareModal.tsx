@@ -80,8 +80,7 @@ function Share({ isOpen, onOpenChange, url,isInvite }: ShareProps) {
                       justifyContent: 'space-around',
                     },
                   }}
-                  socialTypes={['facebook', 'twitter', 'linkedin', 'reddit', 'whatsapp', 'telegram']}
-                  onSocialButtonClicked={(data) => console.log(data)}    
+                  socialTypes={['facebook', 'twitter', 'linkedin', 'reddit', 'whatsapp', 'telegram']}    
                 />
               </div>
             </ModalBody>

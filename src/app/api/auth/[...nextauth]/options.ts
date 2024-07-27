@@ -9,6 +9,8 @@ import User from '@/model/userModel';
 
 export const authOptions: NextAuthOptions = {
     providers: [
+      google({ clientId: process.env.GOOGLE_CLIENT_ID as string, clientSecret: process.env.GOOGLE_CLIENT_SECRET as string }),
+      Github({clientId:process.env.GITHUB_CLIENT_ID as string,clientSecret:process.env.GITHUB_CLIENT_SECRET as string}),
       CredentialsProvider({
         id: 'credentials',
         name: 'Credentials',
@@ -49,21 +51,107 @@ export const authOptions: NextAuthOptions = {
       }),
     ],
     callbacks: {
-      async jwt({ token, user ,trigger,session}) {
+      async signIn({user,account}){
+        if(account?.provider=='google'){
+            try{
+                const {email,id,name,image}=user;
+                console.log(user);
+                console.log(email);
+                const foundUser=await User.findOne({
+                  $or: [
+                    { email: email },
+                    { AuthId: id },
+                  ],
+                });
+                if(!foundUser){
+                  if(email&&id&&name){
+                    const createdUser=await User.create({
+                            username:name?.toString(),
+                            password:id?.toString(),
+                            email:email?.toString(),
+                            avatar:image||'',
+                            otp:'0000',
+                            otpExpiry:new Date(Date.now()+3600000),
+                            isVerified:true,
+                            AuthId:id.toString()   
+                    })
+                    console.log(createdUser);
+                }
+                }
+                return true;
+            }catch(error){
+                throw new Error('Error when creating user');
+            }
+        }
+        if(account?.provider=='github'){
+          try{
+            dbConnect();
+            const {email,id,name,image}=user;
+            console.log(user);
+            console.log(email);
+            const foundUser=await User.findOne({
+              $or: [
+                { email: email },
+                { AuthId: id },
+              ],
+            });
+            if(!foundUser){
+                if(email&&id&&name){
+                const createdUser=await User.create({
+                        username:name?.toString(),
+                        password:id?.toString(),
+                        email:email?.toString(),
+                        avatar:image||'',
+                        otp:'0000',
+                        otpExpiry:new Date(Date.now()+3600000),
+                        isVerified:true,
+                        AuthId:id.toString()   
+                })
+                console.log(createdUser);
+            }
+            }
+            return true;
+        }catch(error){
+            throw new Error('Error when creating user');
+        }
+        }
+        if(account?.provider=='credentials'){
+            return true;
+        }
+        return false;
+    },
+      async jwt({ token, user ,trigger,session,account}){
 
         if(trigger=='update'){
-          // console.log('Mysession:',session)
           if(session.isAvatarSet!=undefined){
             token.isAvatarSet=session.isAvatarSet
           }
           if(session.avatar!=''){
             token.avatar=session.avatar
           }
-          // console.log('MyTOken:',token)
         }
 
         if (user) {
-          token._id = user._id?.toString(); // Convert ObjectId to string
+          console.log('User:',user);
+          if(account?.provider=='github'||account?.provider=='google'){
+            console.log('entered');
+            const foundUser=await User.findOne({
+              $or: [
+                { email: user.email },
+                { AuthId: user.id },
+              ],
+            });
+            token._id = foundUser?._id?.toString(); 
+            token.isVerified = foundUser?.isVerified;
+            token.username = foundUser?.username;
+            token.avatar = foundUser?.avatar;
+            token.isAvatarSet=foundUser?.isAvatarSet;
+            token.fallbackColor=foundUser?.fallBackColour;
+
+            return token;
+
+          }
+          token._id = user._id?.toString(); 
           token.isVerified = user.isVerified;
           token.username = user.username;
           token.avatar = user.avatar;
@@ -81,7 +169,7 @@ export const authOptions: NextAuthOptions = {
           session.user.avatar = token.avatar;
           session.user.fallbackColor = token.fallbackColor;
         }
-        // console.log('Hi i am here:',token,session,newSession,user);
+        console.log('Hi i am here:',token,session,newSession,user);
         if(trigger=='update'){
           if(token?.isAvatarSet!=undefined){
             session.user.isAvatarSet=token.isAvatarSet
@@ -99,7 +187,7 @@ export const authOptions: NextAuthOptions = {
     },
     secret: process.env.AUTH_SECRET,
     pages: {
-      signIn: '/auth/login',
+      signIn: '/auth/login',  
     },
   };  
 

@@ -14,7 +14,7 @@ async function getWorkspaces() {
   }
 
   const _id = session.user._id as string;
-  console.log(_id)
+  // console.log(_id)
   
   const res=await getWorkspacesById(_id)
   const data = JSON.parse(res);
@@ -28,7 +28,7 @@ async function getWorkspaces() {
 
 export default async function Page() {
   const workspaces = await getWorkspaces();
-  console.log(workspaces);
+  // console.log(workspaces);
   
 
   if (!workspaces) {

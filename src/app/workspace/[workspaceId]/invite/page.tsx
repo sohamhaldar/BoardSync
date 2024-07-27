@@ -25,8 +25,8 @@ function Page({ params }: { params: { workspaceId: string } }) {
         const response = await fetch(`/api/workspaces/getworkspace?workspaceId=${workspaceId}`);
         const data = await response.json();
         const memberId=session?.user._id;
-        console.log(memberId);
-        console.log(data);
+        // console.log(memberId);
+        // console.log(data);
         const isExist = data.data.members.some((member: any) => {
           if (!member.id || !memberId) return false;
           
@@ -35,7 +35,6 @@ function Page({ params }: { params: { workspaceId: string } }) {
           
           return memberIdStr === sessionMemberIdStr;
         });
-        console.log('IsExist',isExist)
         if(isExist){
           console.log("Exist in workspace");
           router.push(`/workspace/${workspaceId}`);

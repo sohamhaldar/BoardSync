@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import WorkspaceForm from './WorkspaceForm';
 import { usePathname, useRouter } from 'next/navigation';
 // BoardSync\frontend\src\assets\Screenshot_2024-07-02_233541-removebg-preview.png
-// import { getServerSession } from 'next-auth';
+import { signOut } from 'next-auth/react';
 // import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
 function Navbar({workspaceName,workspaceId,isOwner}:{
@@ -17,7 +17,7 @@ function Navbar({workspaceName,workspaceId,isOwner}:{
 }) {
     const {data:session} = useSession();
     const pathname=usePathname();
-    console.log('Pathname: ',pathname);
+    // console.log('Pathname: ',pathname);
     const router=useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const {isOpen:IsOpen, onOpen, onOpenChange,onClose} = useDisclosure();
@@ -29,7 +29,7 @@ function Navbar({workspaceName,workspaceId,isOwner}:{
         router.push('/dashboard');
       }else{
         const data=await response.json();
-        console.log(data);
+        // console.log(data);
       }
       
     }
@@ -50,7 +50,7 @@ function Navbar({workspaceName,workspaceId,isOwner}:{
         router.push('/dashboard');
       }else{
         const data=await response.json();
-        console.log(data);
+        // console.log(data);
       }
 
     }
@@ -181,7 +181,10 @@ function Navbar({workspaceName,workspaceId,isOwner}:{
           <DropdownItem key="about" onClick={()=>router.push('/profile')}>Profile</DropdownItem>
         </DropdownSection>
 
-        <DropdownItem key="logout" className="text-danger">Log Out</DropdownItem>
+        <DropdownItem key="logout" className="text-danger" onClick={async()=>{
+          await signOut();
+          router.push('/auth/login');
+          }} >Log Out</DropdownItem>
       </DropdownMenu>
     </Dropdown>
             

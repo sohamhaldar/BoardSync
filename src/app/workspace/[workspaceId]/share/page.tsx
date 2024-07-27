@@ -17,7 +17,7 @@ function EditorControl({workspaceId,setIsLoading,data}:{
       const getWorkspaces=async(data:any)=>{
         // const response=await fetch(`/api/workspaces/getworkspace?workspaceId=${workspaceId}`);
         // const data=await response.json();
-        console.log(data);
+        // console.log(data);
         if(data&&data.data&&data.data.board&&editor){
             const board=JSON.parse(data.data.board);
             let snapshot = getSnapshot(editor.store);

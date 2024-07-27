@@ -25,19 +25,19 @@ function GroupChat({socket,workspaceId}:{
 
   useEffect(() => {
     const messageHandler = (result:any) => {
-      console.log('message received', result);
+      // console.log('message received', result);
       setMessages((prevMessages:any) => [...prevMessages, result]);
     };
   
     const userJoinedHandler = (result:any) => {
-      console.log(result);
+      // console.log(result);
       // setMessages([...result.chats])
     };
     
     socket?.on('message', messageHandler);
     socket?.on('user-joined', userJoinedHandler);
     socket?.on('get-chats',(result)=>{
-      console.log(result);
+      // console.log(result);
       if(result.chats){
         setMessages([...result.chats]);
       }

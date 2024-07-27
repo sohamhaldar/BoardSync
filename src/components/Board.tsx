@@ -26,10 +26,10 @@ function EditorControl({socket,username,workspaceId}:{
   const handleChangeEvent = useCallback(
     (change: HistoryEntry<TLRecord>) => {
         const snapshot = change.changes
-        console.log('doing');
+        // console.log('doing');
 				const modified=getSnapshot(editor.store);
         // editor.loadSnapshot(modified);
-				console.log(modified);
+				// console.log(modified);
 				socket.emit('board-changes',{data:modified.document.store,owner:username,workspaceId});
     },
     [editor.store, socket]
@@ -39,7 +39,7 @@ function EditorControl({socket,username,workspaceId}:{
 		socket.on('board-changes', (data: any) => {
       if (editor && data && data.data) {
         let snapshot = getSnapshot(editor.store);
-        console.log('first', snapshot);
+        // console.log('first', snapshot);
         if (snapshot && snapshot.document && snapshot.document.store) {
           for (const key in data.data) {
             if (key.startsWith("shape:")) {
@@ -68,7 +68,7 @@ function EditorControl({socket,username,workspaceId}:{
     socket.on('get-board', (data: any) => {
       if (data && data.board && editor) {
         let snapshot = getSnapshot(editor.store);
-        console.log('first', snapshot);
+        // console.log('first', snapshot);
         if (snapshot && snapshot.document && snapshot.document.store) {
           for (const key in data.board.data) {
             if (key.startsWith("shape:")) {

@@ -44,7 +44,7 @@ function WorkspaceForm({isOpen, onOpen, onOpenChange,onClose,_id,revalidateActio
             closeModal();
 
         }
-        console.log(data);
+        // console.log(data);
         
     }
     return (
@@ -64,7 +64,7 @@ function WorkspaceForm({isOpen, onOpen, onOpenChange,onClose,_id,revalidateActio
                                 <div className='group h-full w-full absolute flex flex-col justify-center items-center rounded-lg hover:bg-gray-800/20' onClick={()=>document.getElementById('workspaceImg-input')?.click()}>
                                     <input id='workspaceImg-input' type="file" style={{display:'none'}}  onChange={(e)=>{
                                         if (e.target.files && e.target.files[0]) {
-                                            console.log(URL.createObjectURL(e.target.files[0]));
+                                            // console.log(URL.createObjectURL(e.target.files[0]));
                                             setWorkspaceImgUrl(URL.createObjectURL(e.target.files[0]));
                                             setWorkspaceImg(e.target.files[0])
                                           }

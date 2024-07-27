@@ -11,9 +11,9 @@ const Page= ({ params }: { params: { username: string }}) => {
   const username=params.username;
     const Router=useRouter();
   const handleSubmit=async()=>{
-    console.log(otp);
+    // console.log(otp);
     if(otp.length<6){
-        console.log('Please enter the valid otp');
+        toast.error('Please enter the valid otp');
         return;
     }
     const data={
@@ -37,7 +37,7 @@ const Page= ({ params }: { params: { username: string }}) => {
       }
   
       const result = await response.json();
-      console.log('Success:', result);
+      // console.log('Success:', result);
       toast.success("Verification succesfull");
       Router.push('/auth/login');
       setLoading(false);

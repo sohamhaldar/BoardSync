@@ -12,6 +12,7 @@ interface UserType extends Document {
     isVerified:boolean;
     fallBackColour:string;
     isAvatarSet:boolean;
+    AuthId?:string;
 }
 
 const userSchema: Schema<UserType> = new Schema({
@@ -58,6 +59,9 @@ const userSchema: Schema<UserType> = new Schema({
     isAvatarSet:{
         type:Boolean,
         default:false
+    },
+    AuthId:{
+        type:String
     }
     
 },{timestamps:true});

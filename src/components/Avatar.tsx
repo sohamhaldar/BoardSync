@@ -13,7 +13,7 @@ function Avatar({redirectTodashboard}:{
     return name.charAt(0).toUpperCase();
   };
   const changeAvatar=async()=>{
-    console.log(session?.user);
+    // console.log(session?.user);
     if(image){
       const formData=new FormData();
       formData.append('avatar',image);
@@ -24,14 +24,27 @@ function Avatar({redirectTodashboard}:{
         body: formData,
       });
       const data=await response.json();
-      console.log(data);
+      // console.log(data);
       
 
       await update({isAvatarSet:true,avatar:data.url});
       // await update({isAvatarSet:false});
-      console.log("Changed succesfully:",session?.user);
+      console.log("Changed succesfully:");
     }else{
-      await update({isAvatarSet:true,avatar:''});
+      const _id=session?.user._id as string;
+      const response = await fetch('/api/updateavatarstatus', {
+        method: 'POST',
+        headers: { 
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({
+          _id,
+          avatarStatus:true
+        }),
+      });
+      const data=await response.json();
+      // console.log(data);
+      await update({isAvatarSet:true,avatar:session?.user.avatar});
     }
     
     if(redirectTodashboard){
@@ -55,7 +68,6 @@ function Avatar({redirectTodashboard}:{
               src={avatar||session?.user.avatar}
               style={{ clipPath: 'circle()' }}
               className='h-full w-full rounded-full object-cover'
-              onClick={() => console.log('clicked')}
             />
           ) : (
             <div
@@ -77,9 +89,9 @@ function Avatar({redirectTodashboard}:{
           id='avatar-input'
           className='hidden'
           onChange={(e) => {
-            console.log(e.target.files);
+            // console.log(e.target.files);
             if (e.target.files && e.target.files[0]) {
-              console.log(URL.createObjectURL(e.target.files[0]));
+              // console.log(URL.createObjectURL(e.target.files[0]));
               setAvatar(URL.createObjectURL(e.target.files[0]));
               setImage(e.target.files[0])
             }

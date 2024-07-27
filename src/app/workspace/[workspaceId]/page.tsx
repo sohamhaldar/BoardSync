@@ -32,7 +32,7 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
   useEffect(() => {
     if (socket) {
       const result = { workspaceId };
-      console.log('Emitting join-workspace:', result);
+      // console.log('Emitting join-workspace:', result);
       
       socket.on('connect', () => {
         console.log('Socket connected');
@@ -47,11 +47,11 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
       socket.emit('join-workspace', result);
   
       socket.on('joined-workspace', (data) => {
-        console.log('Successfully joined workspace:', data);
+        // console.log('Successfully joined workspace:', data);
       });
   
       socket.on('join-error', (error) => {
-        console.error('Error joining workspace:', error);
+        // console.error('Error joining workspace:', error);
       });
   
       return () => {
@@ -76,13 +76,12 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
       if (_id) {
         const response = await fetch(`/api/workspaces?_id=${_id}`);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (response.ok) {
           const result = data.data.find((item:any) => item._id == workspaceId);
           if (result) {
-            console.log(result);
-            console.log(_id);
-            console.log('isEqual', result.owner == _id);
+            // console.log(result);
+            
             if (result.owner == _id) {
               setIsOwner(true);
             }
@@ -99,14 +98,6 @@ function BoardLayout({ params }: { params: { workspaceId: string }}) {
 
   useEffect(()=>{
     isWorkspaceAvailable();
-
-    // socket?.on('message',(result)=>{
-    //   setMessages((prevMessages:any)=>[...prevMessages,result]);
-    // });
-    // socket?.emit('join-workspace',{
-    //   workspaceId
-    // });
-
 
   },[workspaceId,session?.user._id])
 
