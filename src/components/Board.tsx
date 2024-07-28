@@ -1,6 +1,6 @@
 'use client';
 import React,{useCallback, useEffect, useState} from 'react';
-import { Tldraw, useEditor, HistoryEntry, TLRecord, Editor} from 'tldraw'
+import { Tldraw, useEditor} from 'tldraw'
 import 'tldraw/tldraw.css'
 
 function Board({socket,workspaceId,username}:{

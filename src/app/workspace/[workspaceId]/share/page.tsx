@@ -1,6 +1,6 @@
 'use client';
 import React,{useCallback, useEffect, useState} from 'react';
-import { Tldraw, useEditor,getSnapshot, loadSnapshot, HistoryEntry, TLRecord} from 'tldraw';
+import { Tldraw, useEditor} from 'tldraw';
 import 'tldraw/tldraw.css';
 import Image from 'next/image';
 import logo from '../../../../../public/logo.png';
@@ -20,9 +20,9 @@ function EditorControl({workspaceId,setIsLoading,data}:{
         // console.log(data);
         if(data&&data.data&&data.data.board&&editor){
             const board=JSON.parse(data.data.board);
-            let snapshot = getSnapshot(editor.store);
-            snapshot.document.store = board.data;
-            editor.loadSnapshot(snapshot);
+            let snapshot = editor.store.getSnapshot();
+            snapshot.store = board.data;
+            editor.store.loadSnapshot(snapshot);
         }
       }
       getWorkspaces(data);
