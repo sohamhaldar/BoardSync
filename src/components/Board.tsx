@@ -1,6 +1,6 @@
 'use client';
 import React,{useCallback, useEffect, useState} from 'react';
-import { Tldraw, useEditor,getSnapshot, loadSnapshot, HistoryEntry, TLRecord} from 'tldraw'
+import { Tldraw, useEditor, HistoryEntry, TLRecord, Editor} from 'tldraw'
 import 'tldraw/tldraw.css'
 
 function Board({socket,workspaceId,username}:{
@@ -8,8 +8,6 @@ function Board({socket,workspaceId,username}:{
   workspaceId:string
   username:string|undefined
 }) {
-
-
   return (
     <Tldraw className='rounded-lg z-0'>
       <EditorControl socket={socket} username={username} workspaceId={workspaceId}/>
@@ -23,24 +21,12 @@ function EditorControl({socket,username,workspaceId}:{
   workspaceId:string
 }){
   const editor=useEditor();
-  const handleChangeEvent = useCallback(
-    (change: HistoryEntry<TLRecord>) => {
-        const snapshot = change.changes
-        // console.log('doing');
-				const modified=getSnapshot(editor.store);
-        // editor.loadSnapshot(modified);
-				// console.log(modified);
-				socket.emit('board-changes',{data:modified.document.store,owner:username,workspaceId});
-    },
-    [editor.store, socket]
-)
-
   useEffect(() => {
 		socket.on('board-changes', (data: any) => {
       if (editor && data && data.data) {
-        let snapshot = getSnapshot(editor.store);
+        let snapshot = editor.store.getSnapshot();
         // console.log('first', snapshot);
-        if (snapshot && snapshot.document && snapshot.document.store) {
+        if (snapshot&& snapshot.store) {
           for (const key in data.data) {
             if (key.startsWith("shape:")) {
               let shape = data.data[key];
@@ -56,8 +42,8 @@ function EditorControl({socket,username,workspaceId}:{
               }
             }
           }
-          snapshot.document.store = data.data;
-          editor.loadSnapshot(snapshot);
+          snapshot.store = data.data;
+          editor.store.loadSnapshot(snapshot);
         }
       }
     });
@@ -67,9 +53,9 @@ function EditorControl({socket,username,workspaceId}:{
     })
     socket.on('get-board', (data: any) => {
       if (data && data.board && editor) {
-        let snapshot = getSnapshot(editor.store);
+        let snapshot = editor.store.getSnapshot();
         // console.log('first', snapshot);
-        if (snapshot && snapshot.document && snapshot.document.store) {
+        if (snapshot && snapshot.store) {
           for (const key in data.board.data) {
             if (key.startsWith("shape:")) {
               let shape = data.board.data[key];
@@ -85,8 +71,8 @@ function EditorControl({socket,username,workspaceId}:{
               }
             }
           }
-          snapshot.document.store = data.board.data;
-          editor.loadSnapshot(snapshot);
+          snapshot.store = data.board.data;
+          editor.store.loadSnapshot(snapshot);
         }
       }
     });
@@ -96,22 +82,16 @@ function EditorControl({socket,username,workspaceId}:{
       socket.off('get-board');
     }
 	  }, [editor,socket]);
-
-
-
-  useEffect(()=>{
-    if(editor){
-      const cleanupFunction = editor.store.listen(handleChangeEvent, {
-        source: "user",
-        scope: "document",
-    })
-    return () => {
-      cleanupFunction()
-      // socket.off()
-  }
-    }
-    
-  },[editor,socket,handleChangeEvent,]);
+    useEffect(() => {
+			if(editor){
+				editor.on('update',()=>{
+						// console.log('doing');
+					const modified=editor.store.getSnapshot();
+					console.log(modified);
+          socket.emit('board-changes',{data:modified.store,owner:username,workspaceId});
+				});
+			}
+	  },[editor,socket])
 
   return null;
 }
