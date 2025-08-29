@@ -20,6 +20,7 @@
     "mongoose": "^8.5.1",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
+    "nodemailer": "^6.10.1",
     "postmark": "^4.0.5",
     "randomcolor": "^0.6.2",
     "react": "^18",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
+    "@types/nodemailer": "^7.0.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
